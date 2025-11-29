@@ -65,6 +65,18 @@ export default function AddInventoryModal({ visible, onClose, onSuccess }: AddIn
       
       setWarehouses(warehousesResult);
       setBatches(batchesResult);
+      
+      // تعيين أول عنصر كقيمة افتراضية
+      if (warehousesResult.length > 0 && formData.fromWarehouseId === 0) {
+        setFormData(prev => ({ 
+          ...prev, 
+          fromWarehouseId: warehousesResult[0].id,
+          toWarehouseId: warehousesResult.length > 1 ? warehousesResult[1].id : warehousesResult[0].id
+        }));
+      }
+      if (batchesResult.length > 0 && formData.batchId === 0) {
+        setFormData(prev => ({ ...prev, batchId: batchesResult[0].id }));
+      }
     } catch (error) {
       console.error('Error loading data:', error);
     }
