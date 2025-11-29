@@ -108,7 +108,11 @@ export default function WorkersScreen() {
   }, []);
 
   const renderWorkerItem = ({ item }: { item: Worker }) => (
-    <View style={styles.workerCard}>
+    <TouchableOpacity 
+      style={styles.workerCard}
+      onPress={() => router.push(`/workers/${item.id}`)}
+      activeOpacity={0.7}
+    >
       <View style={styles.workerHeader}>
         <View style={[styles.statusBadge, item.status === 'active' ? styles.statusActive : styles.statusInactive]}>
           <Text style={styles.statusText}>{item.status === 'active' ? 'نشط' : 'غير نشط'}</Text>
