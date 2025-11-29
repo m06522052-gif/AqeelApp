@@ -37,8 +37,8 @@ export default function AddDistributionModal({ visible, onClose, onSuccess }: Ad
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [batches, setBatches] = useState<Batch[]>([]);
   const [formData, setFormData] = useState({
-    workerId: '',
-    batchId: '',
+    workerId: 0,
+    batchId: 0,
     quantity: '',
     expectedDays: '7',
   });
