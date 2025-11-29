@@ -37,10 +37,10 @@ export default function AddProductionModal({ visible, onClose, onSuccess }: AddP
   const [distributions, setDistributions] = useState<Distribution[]>([]);
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
   const [formData, setFormData] = useState({
-    distributionId: '',
+    distributionId: 0,
     quantity: '',
     quality: 'جيد',
-    warehouseId: '',
+    warehouseId: 0,
     notes: '',
   });
 
