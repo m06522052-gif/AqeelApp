@@ -36,4 +36,18 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# Metro cache
+.metro-cache/
+
+# SQLite databases (optional - uncomment to exclude)
+# *.db
+# *.db-journal
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
 app-example
