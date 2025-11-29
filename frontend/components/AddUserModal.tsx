@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import { getDatabase } from '@/database/schema';
 import { Picker } from '@react-native-picker/picker';
+import { hashPassword, validatePasswordStrength, sanitizeInput, validateEmail } from '@/utils/security';
 
 interface AddUserModalProps {
   visible: boolean;
