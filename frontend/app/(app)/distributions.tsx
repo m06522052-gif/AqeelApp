@@ -142,6 +142,15 @@ export default function DistributionsScreen() {
           </View>
         }
       />
+      
+      <AddDistributionModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSuccess={() => {
+          setModalVisible(false);
+          loadDistributions();
+        }}
+      />
     </View>
   );
 }
