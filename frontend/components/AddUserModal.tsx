@@ -33,9 +33,8 @@ export default function AddUserModal({ visible, onClose, onSuccess }: AddUserMod
   });
 
   const roles = [
-    { value: 'admin', label: 'مدير نظام' },
     { value: 'manager', label: 'مدير' },
-    { value: 'user', label: 'مستخدم' },
+    { value: 'employee', label: 'موظف' },
   ];
 
   const handleSubmit = async () => {
