@@ -22,6 +22,7 @@ interface Distribution {
 export default function DistributionsScreen() {
   const [distributions, setDistributions] = useState<Distribution[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const loadDistributions = async () => {
     try {
