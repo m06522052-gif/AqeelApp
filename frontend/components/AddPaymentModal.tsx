@@ -36,8 +36,8 @@ export default function AddPaymentModal({ visible, onClose, onSuccess }: AddPaym
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [distributions, setDistributions] = useState<Distribution[]>([]);
   const [formData, setFormData] = useState({
-    workerId: '',
-    distributionId: '',
+    workerId: 0,
+    distributionId: 0,
     amount: '',
     paymentMethod: 'نقدي',
     notes: '',
