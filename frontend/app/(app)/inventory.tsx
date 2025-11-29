@@ -21,6 +21,7 @@ interface InventoryMovement {
 export default function InventoryScreen() {
   const [movements, setMovements] = useState<InventoryMovement[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const loadMovements = async () => {
     try {
