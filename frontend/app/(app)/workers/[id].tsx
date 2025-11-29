@@ -197,12 +197,32 @@ export default function WorkerDetailScreen() {
         </View>
 
         <View style={styles.actionsCard}>
+          <TouchableOpacity style={styles.editButton} onPress={() => setEditModalVisible(true)}>
+            <Ionicons name="create" size={20} color={theme.colors.surface} />
+            <Text style={styles.editButtonText}>تعديل البيانات</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
             <Ionicons name="trash" size={20} color={theme.colors.surface} />
             <Text style={styles.deleteButtonText}>حذف العامل</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {worker && (
+        <EditWorkerModal
+          visible={editModalVisible}
+          onClose={() => setEditModalVisible(false)}
+          onSuccess={loadWorkerDetails}
+          workerId={worker.id}
+          currentData={{
+            name: worker.name,
+            phone: worker.phone,
+            address: worker.address,
+            registration_date: worker.registration_date,
+          }}
+        />
+      )}
     </ScrollView>
   );
 }
