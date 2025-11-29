@@ -77,18 +77,18 @@ export default function UserDetailScreen() {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'admin': return theme.colors.error;
       case 'manager': return theme.colors.primary;
-      case 'user': return theme.colors.success;
+      case 'employee': return theme.colors.success;
+      case 'admin': return theme.colors.error; // للمستخدم الافتراضي القديم
       default: return theme.colors.textSecondary;
     }
   };
 
   const getRoleText = (role: string) => {
     switch (role) {
-      case 'admin': return 'مدير نظام';
       case 'manager': return 'مدير';
-      case 'user': return 'مستخدم';
+      case 'employee': return 'موظف';
+      case 'admin': return 'مدير'; // للمستخدم الافتراضي القديم
       default: return role;
     }
   };
