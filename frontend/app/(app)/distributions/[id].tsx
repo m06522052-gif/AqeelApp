@@ -236,12 +236,35 @@ export default function DistributionDetailScreen() {
         </View>
 
         <View style={styles.actionsCard}>
+          <TouchableOpacity style={styles.editButton} onPress={() => setEditModalVisible(true)}>
+            <Ionicons name="create" size={20} color={theme.colors.surface} />
+            <Text style={styles.editButtonText}>تعديل التوزيع</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
             <Ionicons name="trash" size={20} color={theme.colors.surface} />
             <Text style={styles.deleteButtonText}>حذف التوزيع</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {distribution && (
+        <EditDistributionModal
+          visible={editModalVisible}
+          onClose={() => setEditModalVisible(false)}
+          onSuccess={loadDistributionDetails}
+          distributionId={distribution.id}
+          currentData={{
+            distribution_number: distribution.distribution_number,
+            worker_id: distribution.worker_id,
+            batch_id: distribution.batch_id,
+            quantity: distribution.quantity,
+            distribution_date: distribution.distribution_date,
+            expected_completion_date: distribution.expected_completion_date,
+            status: distribution.status,
+          }}
+        />
+      )}
     </ScrollView>
   );
 }
