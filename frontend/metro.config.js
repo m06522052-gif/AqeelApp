@@ -22,4 +22,9 @@ config.cacheStores = [
 // Reduce the number of workers to decrease resource usage
 config.maxWorkers = 2;
 
+// Add support for @ alias
+config.resolver.extraNodeModules = {
+  '@': __dirname,
+};
+
 module.exports = config;
