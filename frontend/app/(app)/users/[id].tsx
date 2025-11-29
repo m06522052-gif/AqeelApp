@@ -173,12 +173,32 @@ export default function UserDetailScreen() {
         </View>
 
         <View style={styles.actionsCard}>
+          <TouchableOpacity style={styles.editButton} onPress={() => setEditModalVisible(true)}>
+            <Ionicons name="create" size={20} color={theme.colors.surface} />
+            <Text style={styles.editButtonText}>تعديل البيانات</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
             <Ionicons name="trash" size={20} color={theme.colors.surface} />
             <Text style={styles.deleteButtonText}>حذف المستخدم</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {user && (
+        <EditUserModal
+          visible={editModalVisible}
+          onClose={() => setEditModalVisible(false)}
+          onSuccess={loadUserDetails}
+          userId={user.id}
+          currentData={{
+            username: user.username,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+          }}
+        />
+      )}
     </ScrollView>
   );
 }
