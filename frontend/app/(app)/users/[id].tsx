@@ -30,6 +30,7 @@ export default function UserDetailScreen() {
   const router = useRouter();
   const [user, setUser] = useState<UserDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   useEffect(() => {
     loadUserDetails();
