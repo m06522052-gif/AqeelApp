@@ -222,12 +222,34 @@ export default function ProductionDetailScreen() {
         )}
 
         <View style={styles.actionsCard}>
+          <TouchableOpacity style={styles.editButton} onPress={() => setEditModalVisible(true)}>
+            <Ionicons name="create" size={20} color={theme.colors.surface} />
+            <Text style={styles.editButtonText}>تعديل الإنتاج</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
             <Ionicons name="trash" size={20} color={theme.colors.surface} />
             <Text style={styles.deleteButtonText}>حذف الإنتاج</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {production && (
+        <EditProductionModal
+          visible={editModalVisible}
+          onClose={() => setEditModalVisible(false)}
+          onSuccess={loadProductionDetails}
+          productionId={production.id}
+          currentData={{
+            distribution_id: production.distribution_id,
+            quantity: production.quantity,
+            production_date: production.production_date,
+            quality: production.quality,
+            warehouse_id: production.warehouse_id,
+            notes: production.notes || '',
+          }}
+        />
+      )}
     </ScrollView>
   );
 }
