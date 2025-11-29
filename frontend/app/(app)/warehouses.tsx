@@ -29,6 +29,7 @@ interface Warehouse {
 }
 
 export default function WarehousesScreen() {
+  const router = useRouter();
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
