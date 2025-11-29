@@ -31,6 +31,7 @@ export default function WarehouseDetailScreen() {
   const router = useRouter();
   const [warehouse, setWarehouse] = useState<WarehouseDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   useEffect(() => {
     loadWarehouseDetails();
