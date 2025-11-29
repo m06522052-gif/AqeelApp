@@ -21,6 +21,7 @@ export default function PaymentsScreen() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const loadPayments = async () => {
     try {
