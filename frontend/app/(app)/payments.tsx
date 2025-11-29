@@ -126,6 +126,12 @@ export default function PaymentsScreen() {
           </View>
         }
       />
+      
+      <AddPaymentModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onPaymentAdded={loadPayments}
+      />
     </View>
   );
 }
