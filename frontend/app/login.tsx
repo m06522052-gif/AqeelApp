@@ -35,20 +35,32 @@ export default function LoginScreen() {
     setIsLoading(true);
     try {
       const db = await getDatabase();
-      const result = await db.getFirstAsync(
-        'SELECT id, username, email, role FROM users WHERE email = ? AND password = ? AND is_active = 1',
-        [email, password]
+      // جلب المستخدم بناءً على البريد الإلكتروني فقط
+      const user = await db.getFirstAsync(
+        'SELECT id, username, email, role, password FROM users WHERE email = ? AND is_active = 1',
+        [email]
       ) as any;
 
-      if (result) {
-        login(result);
+      if (!user) {
+        Alert.alert('خطأ', 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
+        setIsLoading(false);
+        return;
+      }
+
+      // التحقق من كلمة المرور المشفرة
+      const isPasswordValid = await verifyPassword(password, user.password);
+      
+      if (isPasswordValid) {
+        // إزالة كلمة المرور من الكائن قبل حفظه
+        const { password: _, ...userWithoutPassword } = user;
+        login(userWithoutPassword);
         router.replace('/(app)/dashboard');
       } else {
         Alert.alert('خطأ', 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
       }
     } catch (error) {
       console.error('Login error:', error);
-      Alert.alert('خطأ', 'حدث خطأ أثناء تسجيل الدخول');
+      Alert.alert('خطأ', 'حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.');
     } finally {
       setIsLoading(false);
     }
