@@ -1,0 +1,264 @@
+import React, { useState, useEffect } from 'react';
+import {
+  Modal,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { theme } from '@/constants/theme';
+import { getDatabase } from '@/database/schema';
+import { Picker } from '@react-native-picker/picker';
+
+interface Warehouse {
+  id: number;
+  name: string;
+}
+
+interface AddBatchModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
+export default function AddBatchModal({ visible, onClose, onSuccess }: AddBatchModalProps) {
+  const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
+  const [formData, setFormData] = useState({
+    supplier: '',
+    bagType: '4',
+    quantity: '',
+    price: '',
+    warehouseId: '',
+    notes: '',
+  });
+
+  useEffect(() => {
+    if (visible) {
+      loadWarehouses();
+    }
+  }, [visible]);
+
+  const loadWarehouses = async () => {
+    try {
+      const db = await getDatabase();
+      const result = await db.getAllAsync('SELECT id, name FROM warehouses WHERE status = 1') as Warehouse[];
+      setWarehouses(result);
+      if (result.length > 0 && !formData.warehouseId) {
+        setFormData(prev => ({ ...prev, warehouseId: result[0].id.toString() }));
+      }
+    } catch (error) {
+      console.error('Error loading warehouses:', error);
+    }
+  };
+
+  const generateBatchNumber = () => {
+    const timestamp = Date.now();
+    return `BATCH-${timestamp}`;
+  };
+
+  const handleSubmit = async () => {
+    if (!formData.supplier.trim() || !formData.quantity || !formData.price) {
+      Alert.alert('خطأ', 'الرجاء إدخال جميع الحقول المطلوبة');
+      return;
+    }
+
+    try {
+      const db = await getDatabase();
+      const batchNumber = generateBatchNumber();
+      const receiveDate = new Date().toISOString();
+
+      await db.runAsync(
+        'INSERT INTO batches (batch_number, supplier, receive_date, bag_type, quantity, price, warehouse_id, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        batchNumber,
+        formData.supplier.trim(),
+        receiveDate,
+        formData.bagType,
+        parseInt(formData.quantity),
+        parseFloat(formData.price),
+        formData.warehouseId ? parseInt(formData.warehouseId) : null,
+        formData.notes.trim()
+      );
+
+      Alert.alert('نجاح', 'تم إضافة الدفعة بنجاح');
+      setFormData({ supplier: '', bagType: '4', quantity: '', price: '', warehouseId: '', notes: '' });
+      onSuccess();
+      onClose();
+    } catch (error) {
+      console.error('Error adding batch:', error);
+      Alert.alert('خطأ', 'حدث خطأ أثناء إضافة الدفعة');
+    }
+  };
+
+  return (
+    <Modal visible={visible} animationType="slide" transparent>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.modalContainer}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={28} color={theme.colors.text} />
+            </TouchableOpacity>
+            <Text style={styles.modalTitle}>إضافة دفعة جديدة</Text>
+          </View>
+
+          <ScrollView style={styles.form}>
+            <Text style={styles.label}>اسم المورد *</Text>
+            <TextInput
+              style={styles.input}
+              value={formData.supplier}
+              onChangeText={(text) => setFormData({ ...formData, supplier: text })}
+              placeholder="أدخل اسم المورد"
+              placeholderTextColor={theme.colors.textSecondary}
+              textAlign="right"
+            />
+
+            <Text style={styles.label}>نوع الكيس *</Text>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={formData.bagType}
+                onValueChange={(value) => setFormData({ ...formData, bagType: value })}
+                style={styles.picker}
+              >
+                <Picker.Item label="نوع 4" value="4" />
+                <Picker.Item label="نوع 5" value="5" />
+              </Picker>
+            </View>
+
+            <Text style={styles.label}>الكمية *</Text>
+            <TextInput
+              style={styles.input}
+              value={formData.quantity}
+              onChangeText={(text) => setFormData({ ...formData, quantity: text })}
+              placeholder="أدخل الكمية"
+              placeholderTextColor={theme.colors.textSecondary}
+              keyboardType="numeric"
+              textAlign="right"
+            />
+
+            <Text style={styles.label}>السعر (ريال يمني) *</Text>
+            <TextInput
+              style={styles.input}
+              value={formData.price}
+              onChangeText={(text) => setFormData({ ...formData, price: text })}
+              placeholder="أدخل السعر"
+              placeholderTextColor={theme.colors.textSecondary}
+              keyboardType="numeric"
+              textAlign="right"
+            />
+
+            <Text style={styles.label}>المخزن</Text>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={formData.warehouseId}
+                onValueChange={(value) => setFormData({ ...formData, warehouseId: value })}
+                style={styles.picker}
+              >
+                <Picker.Item label="اختر المخزن" value="" />
+                {warehouses.map((warehouse) => (
+                  <Picker.Item key={warehouse.id} label={warehouse.name} value={warehouse.id.toString()} />
+                ))}
+              </Picker>
+            </View>
+
+            <Text style={styles.label}>ملاحظات</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              value={formData.notes}
+              onChangeText={(text) => setFormData({ ...formData, notes: text })}
+              placeholder="أدخل ملاحظات"
+              placeholderTextColor={theme.colors.textSecondary}
+              multiline
+              numberOfLines={3}
+              textAlign="right"
+            />
+
+            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+              <Text style={styles.submitButtonText}>إضافة الدفعة</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
+    </Modal>
+  );
+}
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.borderRadius.xl,
+    borderTopRightRadius: theme.borderRadius.xl,
+    padding: theme.spacing.lg,
+    maxHeight: '90%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing.lg,
+  },
+  modalTitle: {
+    fontSize: theme.fontSize.xl,
+    fontWeight: theme.fontWeight.bold,
+    color: theme.colors.text,
+  },
+  form: {
+    flex: 1,
+  },
+  label: {
+    fontSize: theme.fontSize.md,
+    fontWeight: theme.fontWeight.medium,
+    color: theme.colors.text,
+    marginBottom: theme.spacing.xs,
+    marginTop: theme.spacing.md,
+    textAlign: 'right',
+  },
+  input: {
+    backgroundColor: theme.colors.background,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing.md,
+    fontSize: theme.fontSize.md,
+    color: theme.colors.text,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  textArea: {
+    height: 80,
+    textAlignVertical: 'top',
+  },
+  pickerContainer: {
+    backgroundColor: theme.colors.background,
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    overflow: 'hidden',
+  },
+  picker: {
+    height: 50,
+  },
+  submitButton: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing.md,
+    alignItems: 'center',
+    marginTop: theme.spacing.lg,
+    marginBottom: theme.spacing.xl,
+  },
+  submitButtonText: {
+    color: theme.colors.surface,
+    fontSize: theme.fontSize.lg,
+    fontWeight: theme.fontWeight.bold,
+  },
+});
