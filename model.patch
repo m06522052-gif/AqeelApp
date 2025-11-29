@@ -1,59 +1,100 @@
-diff --git a/frontend/app/login.tsx b/frontend/app/login.tsx
-index 822a667..6dce4f0 100644
---- a/frontend/app/login.tsx
-+++ b/frontend/app/login.tsx
-@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
- import { theme } from '@/constants/theme';
- import { useAuthStore } from '@/stores/authStore';
- import { getDatabase } from '@/database/schema';
-+import { verifyPassword } from '@/utils/security';
- import { SafeAreaView } from 'react-native-safe-area-context';
+diff --git a/frontend/components/AddUserModal.tsx b/frontend/components/AddUserModal.tsx
+index 866ac7b..10bfb03 100644
+--- a/frontend/components/AddUserModal.tsx
++++ b/frontend/components/AddUserModal.tsx
+@@ -39,24 +39,51 @@ export default function AddUserModal({ visible, onClose, onSuccess }: AddUserMod
+   ];
  
- export default function LoginScreen() {
+   const handleSubmit = async () => {
++    // التحقق من الحقول الفارغة
+     if (!formData.username.trim() || !formData.email.trim() || !formData.password) {
+       Alert.alert('خطأ', 'الرجاء إدخال جميع الحقول المطلوبة');
+       return;
+     }
+ 
++    // التحقق من صحة البريد الإلكتروني
++    if (!validateEmail(formData.email)) {
++      Alert.alert('خطأ', 'البريد الإلكتروني غير صحيح');
++      return;
++    }
++
++    // التحقق من تطابق كلمتي المرور
+     if (formData.password !== formData.confirmPassword) {
+-      Alert.alert('خطأ', 'كلمة المرور غير متطابقة');
++      Alert.alert('خطأ', 'كلمات المرور غير متطابقة');
++      return;
++    }
++
++    // التحقق من قوة كلمة المرور
++    const passwordValidation = validatePasswordStrength(formData.password);
++    if (!passwordValidation.isValid) {
++      Alert.alert(
++        'كلمة مرور ضعيفة',
++        'يجب أن تحتوي كلمة المرور على:\n' + passwordValidation.errors.join('\n')
++      );
+       return;
+     }
+ 
+     try {
+       const db = await getDatabase();
++      
++      // تنظيف المدخلات
++      const cleanUsername = sanitizeInput(formData.username);
++      const cleanEmail = sanitizeInput(formData.email);
++      const cleanPhone = sanitizeInput(formData.phone);
++      
++      // تشفير كلمة المرور
++      const hashedPassword = await hashPassword(formData.password);
++      
+       await db.runAsync(
+         'INSERT INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?)',
+-        formData.username.trim(),
+-        formData.email.trim(),
+-        formData.phone.trim(),
+-        formData.password,
++        cleanUsername,
++        cleanEmail,
++        cleanPhone,
++        hashedPassword,
+         formData.role
+       );
+ 
+@@ -76,7 +103,7 @@ export default function AddUserModal({ visible, onClose, onSuccess }: AddUserMod
+       if (error.message && error.message.includes('UNIQUE')) {
+         Alert.alert('خطأ', 'اسم المستخدم أو البريد الإلكتروني موجود مسبقاً');
+       } else {
+-        Alert.alert('خطأ', 'حدث خطأ أثناء إضافة المستخدم');
++        Alert.alert('خطأ', 'حدث خطأ أثناء إضافة المستخدم. يرجى المحاولة مرة أخرى.');
+       }
+     }
+   };
 diff --git a/model.patch b/model.patch
-index 54fc53e..e69de29 100644
+index 02d6da5..e69de29 100644
 --- a/model.patch
 +++ b/model.patch
-@@ -1,94 +0,0 @@
--diff --git a/frontend/app/(app)/inventory.tsx b/frontend/app/(app)/inventory.tsx
--index 0f8de22..0aed70a 100644
----- a/frontend/app/(app)/inventory.tsx
--+++ b/frontend/app/(app)/inventory.tsx
--@@ -101,7 +101,7 @@ export default function InventoryScreen() {
--   return (
--     <View style={styles.container}>
--       <View style={styles.header}>
---        <TouchableOpacity style={styles.addButton}>
--+        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
--           <Ionicons name="add" size={24} color={theme.colors.surface} />
--         </TouchableOpacity>
--         <Text style={styles.headerTitle}>حركة المخزون</Text>
--@@ -120,6 +120,15 @@ export default function InventoryScreen() {
--           </View>
--         }
--       />
--+      
--+      <AddInventoryModal
--+        visible={modalVisible}
--+        onClose={() => setModalVisible(false)}
--+        onSuccess={() => {
--+          setModalVisible(false);
--+          loadMovements();
--+        }}
--+      />
--     </View>
--   );
-- }
+@@ -1,111 +0,0 @@
+-diff --git a/frontend/app/login.tsx b/frontend/app/login.tsx
+-index 822a667..6dce4f0 100644
+---- a/frontend/app/login.tsx
+-+++ b/frontend/app/login.tsx
+-@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
+- import { theme } from '@/constants/theme';
+- import { useAuthStore } from '@/stores/authStore';
+- import { getDatabase } from '@/database/schema';
+-+import { verifyPassword } from '@/utils/security';
+- import { SafeAreaView } from 'react-native-safe-area-context';
+- 
+- export default function LoginScreen() {
 -diff --git a/model.patch b/model.patch
--index 9f626f1..e69de29 100644
+-index 54fc53e..e69de29 100644
 ---- a/model.patch
 -+++ b/model.patch
--@@ -1,60 +0,0 @@
---diff --git a/frontend/app/(app)/payments.tsx b/frontend/app/(app)/payments.tsx
---index b41c6f2..9af3e3b 100644
------ a/frontend/app/(app)/payments.tsx
---+++ b/frontend/app/(app)/payments.tsx
---@@ -95,7 +95,7 @@ export default function PaymentsScreen() {
+-@@ -1,94 +0,0 @@
+--diff --git a/frontend/app/(app)/inventory.tsx b/frontend/app/(app)/inventory.tsx
+--index 0f8de22..0aed70a 100644
+----- a/frontend/app/(app)/inventory.tsx
+--+++ b/frontend/app/(app)/inventory.tsx
+--@@ -101,7 +101,7 @@ export default function InventoryScreen() {
 --   return (
 --     <View style={styles.container}>
 --       <View style={styles.header}>
@@ -61,30 +102,33 @@ index 54fc53e..e69de29 100644
 --+        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
 --           <Ionicons name="add" size={24} color={theme.colors.surface} />
 --         </TouchableOpacity>
---         <Text style={styles.headerTitle}>إدارة المدفوعات</Text>
---@@ -126,6 +126,12 @@ export default function PaymentsScreen() {
+--         <Text style={styles.headerTitle}>حركة المخزون</Text>
+--@@ -120,6 +120,15 @@ export default function InventoryScreen() {
 --           </View>
 --         }
 --       />
 --+      
---+      <AddPaymentModal
+--+      <AddInventoryModal
 --+        visible={modalVisible}
 --+        onClose={() => setModalVisible(false)}
---+        onPaymentAdded={loadPayments}
+--+        onSuccess={() => {
+--+          setModalVisible(false);
+--+          loadMovements();
+--+        }}
 --+      />
 --     </View>
 --   );
 -- }
 --diff --git a/model.patch b/model.patch
---index 3b0e7c4..e69de29 100644
+--index 9f626f1..e69de29 100644
 ----- a/model.patch
 --+++ b/model.patch
---@@ -1,29 +0,0 @@
----diff --git a/frontend/app/(app)/distributions.tsx b/frontend/app/(app)/distributions.tsx
----index f143892..b082928 100644
------- a/frontend/app/(app)/distributions.tsx
----+++ b/frontend/app/(app)/distributions.tsx
----@@ -123,7 +123,7 @@ export default function DistributionsScreen() {
+--@@ -1,60 +0,0 @@
+---diff --git a/frontend/app/(app)/payments.tsx b/frontend/app/(app)/payments.tsx
+---index b41c6f2..9af3e3b 100644
+------ a/frontend/app/(app)/payments.tsx
+---+++ b/frontend/app/(app)/payments.tsx
+---@@ -95,7 +95,7 @@ export default function PaymentsScreen() {
 ---   return (
 ---     <View style={styles.container}>
 ---       <View style={styles.header}>
@@ -92,20 +136,51 @@ index 54fc53e..e69de29 100644
 ---+        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
 ---           <Ionicons name="add" size={24} color={theme.colors.surface} />
 ---         </TouchableOpacity>
----         <Text style={styles.headerTitle}>إدارة التوزيع</Text>
----@@ -142,6 +142,15 @@ export default function DistributionsScreen() {
+---         <Text style={styles.headerTitle}>إدارة المدفوعات</Text>
+---@@ -126,6 +126,12 @@ export default function PaymentsScreen() {
 ---           </View>
 ---         }
 ---       />
 ---+      
----+      <AddDistributionModal
+---+      <AddPaymentModal
 ---+        visible={modalVisible}
 ---+        onClose={() => setModalVisible(false)}
----+        onSuccess={() => {
----+          setModalVisible(false);
----+          loadDistributions();
----+        }}
+---+        onPaymentAdded={loadPayments}
 ---+      />
 ---     </View>
 ---   );
 --- }
+---diff --git a/model.patch b/model.patch
+---index 3b0e7c4..e69de29 100644
+------ a/model.patch
+---+++ b/model.patch
+---@@ -1,29 +0,0 @@
+----diff --git a/frontend/app/(app)/distributions.tsx b/frontend/app/(app)/distributions.tsx
+----index f143892..b082928 100644
+------- a/frontend/app/(app)/distributions.tsx
+----+++ b/frontend/app/(app)/distributions.tsx
+----@@ -123,7 +123,7 @@ export default function DistributionsScreen() {
+----   return (
+----     <View style={styles.container}>
+----       <View style={styles.header}>
+-----        <TouchableOpacity style={styles.addButton}>
+----+        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+----           <Ionicons name="add" size={24} color={theme.colors.surface} />
+----         </TouchableOpacity>
+----         <Text style={styles.headerTitle}>إدارة التوزيع</Text>
+----@@ -142,6 +142,15 @@ export default function DistributionsScreen() {
+----           </View>
+----         }
+----       />
+----+      
+----+      <AddDistributionModal
+----+        visible={modalVisible}
+----+        onClose={() => setModalVisible(false)}
+----+        onSuccess={() => {
+----+          setModalVisible(false);
+----+          loadDistributions();
+----+        }}
+----+      />
+----     </View>
+----   );
+---- }
