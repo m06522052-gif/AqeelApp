@@ -12,6 +12,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import { getDatabase } from '@/database/schema';
+import EditProductionModal from '@/components/EditProductionModal';
 import { format } from 'date-fns';
 
 interface ProductionDetails {

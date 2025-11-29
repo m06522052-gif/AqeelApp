@@ -11,6 +11,7 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
+import EditWarehouseModal from '@/components/EditWarehouseModal';
 import { getDatabase } from '@/database/schema';
 
 interface WarehouseDetails {
