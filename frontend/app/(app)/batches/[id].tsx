@@ -36,6 +36,7 @@ export default function BatchDetailScreen() {
   const router = useRouter();
   const [batch, setBatch] = useState<BatchDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   useEffect(() => {
     loadBatchDetails();
