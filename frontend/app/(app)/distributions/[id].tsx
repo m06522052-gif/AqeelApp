@@ -35,6 +35,7 @@ export default function DistributionDetailScreen() {
   const router = useRouter();
   const [distribution, setDistribution] = useState<DistributionDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   useEffect(() => {
     loadDistributionDetails();
