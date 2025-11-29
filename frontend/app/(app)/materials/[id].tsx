@@ -206,12 +206,38 @@ export default function MaterialDetailScreen() {
         </View>
 
         <View style={styles.actionsCard}>
+          <TouchableOpacity style={styles.editButton} onPress={() => setEditModalVisible(true)}>
+            <Ionicons name="create" size={20} color={theme.colors.surface} />
+            <Text style={styles.editButtonText}>تعديل المادة</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
             <Ionicons name="trash" size={20} color={theme.colors.surface} />
             <Text style={styles.deleteButtonText}>حذف المادة</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {material && (
+        <EditMaterialModal
+          visible={editModalVisible}
+          onClose={() => setEditModalVisible(false)}
+          onSuccess={loadMaterialDetails}
+          materialId={material.id}
+          currentData={{
+            material_number: material.material_number,
+            name: material.name,
+            description: material.description,
+            unit: material.unit,
+            quantity: material.quantity,
+            unit_price: material.unit_price,
+            supplier: material.supplier,
+            warehouse_id: material.warehouse_id,
+            minimum_stock: material.minimum_stock,
+            notes: '',
+          }}
+        />
+      )}
     </ScrollView>
   );
 }
