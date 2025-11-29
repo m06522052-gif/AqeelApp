@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import { getDatabase } from '@/database/schema';
 import { format } from 'date-fns';
+import AddProductionModal from '@/components/AddProductionModal';
 
 interface Production {
   id: number;
@@ -20,6 +21,7 @@ interface Production {
 export default function ProductionScreen() {
   const [productions, setProductions] = useState<Production[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const loadProductions = async () => {
     try {
@@ -41,6 +43,31 @@ export default function ProductionScreen() {
     setRefreshing(true);
     await loadProductions();
     setRefreshing(false);
+  };
+
+  const handleDelete = (production: Production) => {
+    Alert.alert(
+      'تأكيد الحذف',
+      `هل تريد حذف هذا الإنتاج؟`,
+      [
+        { text: 'إلغاء', style: 'cancel' },
+        {
+          text: 'حذف',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const db = await getDatabase();
+              await db.runAsync('DELETE FROM production WHERE id = ?', production.id);
+              await loadProductions();
+              Alert.alert('نجاح', 'تم حذف الإنتاج بنجاح');
+            } catch (error) {
+              console.error('Error deleting production:', error);
+              Alert.alert('خطأ', 'حدث خطأ أثناء حذف الإنتاج');
+            }
+          },
+        },
+      ]
+    );
   };
 
   useEffect(() => {
@@ -108,10 +135,18 @@ export default function ProductionScreen() {
       )}
 
       <View style={styles.productionFooter}>
-        <Ionicons name="calendar" size={14} color={theme.colors.textSecondary} />
-        <Text style={styles.dateText}>
-          {format(new Date(item.production_date), 'yyyy-MM-dd')}
-        </Text>
+        <TouchableOpacity 
+          style={[styles.deleteButton, { backgroundColor: `${theme.colors.error}20` }]}
+          onPress={() => handleDelete(item)}
+        >
+          <Ionicons name="trash" size={16} color={theme.colors.error} />
+        </TouchableOpacity>
+        <View style={styles.dateContainer}>
+          <Ionicons name="calendar" size={14} color={theme.colors.textSecondary} />
+          <Text style={styles.dateText}>
+            {format(new Date(item.production_date), 'yyyy-MM-dd')}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -119,7 +154,7 @@ export default function ProductionScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.addButton}>
+        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
           <Ionicons name="add" size={24} color={theme.colors.surface} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>إدارة الإنتاج</Text>
@@ -135,8 +170,15 @@ export default function ProductionScreen() {
           <View style={styles.emptyContainer}>
             <Ionicons name="construct-outline" size={64} color={theme.colors.textSecondary} />
             <Text style={styles.emptyText}>لا يوجد إنتاج</Text>
+            <Text style={styles.emptySubtext}>اضغط على زر + لإضافة إنتاج جديد</Text>
           </View>
         }
+      />
+
+      <AddProductionModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSuccess={loadProductions}
       />
     </View>
   );
@@ -251,6 +293,18 @@ const styles = StyleSheet.create({
   },
   productionFooter: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  deleteButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dateContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
     gap: theme.spacing.xs,
   },
@@ -267,5 +321,10 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSize.lg,
     color: theme.colors.textSecondary,
     marginTop: theme.spacing.md,
+    marginBottom: theme.spacing.xs,
+  },
+  emptySubtext: {
+    fontSize: theme.fontSize.sm,
+    color: theme.colors.textSecondary,
   },
 });
