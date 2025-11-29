@@ -120,6 +120,15 @@ export default function InventoryScreen() {
           </View>
         }
       />
+      
+      <AddInventoryModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSuccess={() => {
+          setModalVisible(false);
+          loadMovements();
+        }}
+      />
     </View>
   );
 }
