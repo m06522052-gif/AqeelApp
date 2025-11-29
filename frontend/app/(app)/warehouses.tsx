@@ -175,9 +175,14 @@ export default function WarehousesScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-          <Ionicons name="add" size={24} color={theme.colors.surface} />
-        </TouchableOpacity>
+        <View style={styles.headerButtons}>
+          <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+            <Ionicons name="add" size={24} color={theme.colors.surface} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.dashboardButton} onPress={() => router.push('/warehouses/dashboard')}>
+            <Ionicons name="bar-chart" size={24} color={theme.colors.surface} />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.headerTitle}>إدارة المخازن</Text>
       </View>
 
