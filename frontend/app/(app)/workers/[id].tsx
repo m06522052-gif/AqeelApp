@@ -231,6 +231,16 @@ export default function WorkerDetailScreen() {
             <Text style={styles.editButtonText}>تعديل البيانات</Text>
           </TouchableOpacity>
 
+          <TouchableOpacity 
+            style={[styles.toggleButton, { backgroundColor: worker.status === 'active' ? theme.colors.warning : theme.colors.success }]}
+            onPress={handleToggleStatus}
+          >
+            <Ionicons name={worker.status === 'active' ? 'pause-circle' : 'play-circle'} size={20} color={theme.colors.surface} />
+            <Text style={styles.toggleButtonText}>
+              {worker.status === 'active' ? 'تعطيل العامل' : 'تنشيط العامل'}
+            </Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
             <Ionicons name="trash" size={20} color={theme.colors.surface} />
             <Text style={styles.deleteButtonText}>حذف العامل</Text>
