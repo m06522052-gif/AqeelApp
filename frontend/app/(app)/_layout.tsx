@@ -1,6 +1,6 @@
 import { Drawer } from 'expo-router/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { theme } from '../../constants/theme';
+import { theme } from '@/constants/theme';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useAuthStore } from '../../stores/authStore';
 import { useRouter } from 'expo-router';

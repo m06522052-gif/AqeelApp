@@ -13,7 +13,7 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { theme } from '../../constants/theme';
+import { theme } from '@/constants/theme';
 import { getDatabase } from '../../database/schema';
 import { format } from 'date-fns';
 

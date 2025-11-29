@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { theme } from '../../constants/theme';
+import { theme } from '@/constants/theme';
 
 export default function ReportsScreen() {
   const [selectedReport, setSelectedReport] = useState<string | null>(null);
