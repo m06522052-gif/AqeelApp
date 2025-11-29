@@ -5,6 +5,7 @@ import { theme } from '@/constants/theme';
 import { getDatabase } from '@/database/schema';
 import { format } from 'date-fns';
 import AddBatchModal from '@/components/AddBatchModal';
+import { useRouter } from 'expo-router';
 
 interface Batch {
   id: number;
