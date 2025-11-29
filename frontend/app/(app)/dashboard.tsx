@@ -130,7 +130,7 @@ export default function DashboardScreen() {
         <StatCard
           icon="cash"
           title="إجمالي المدفوعات"
-          value={`${stats.totalPayments.toFixed(2)} دينار`}
+          value={`${stats.totalPayments.toFixed(2)} ريال`}
           color={theme.colors.error}
           onPress={() => router.push('/(app)/payments')}
         />

@@ -77,7 +77,7 @@ export default function PaymentsScreen() {
       <View style={styles.amountContainer}>
         <View style={styles.amountCard}>
           <Text style={styles.amountValue}>{item.amount.toFixed(2)}</Text>
-          <Text style={styles.amountLabel}>دينار</Text>
+          <Text style={styles.amountLabel}>ريال</Text>
         </View>
       </View>
 
@@ -103,7 +103,7 @@ export default function PaymentsScreen() {
         <View style={styles.totalContent}>
           <View>
             <Text style={styles.totalLabel}>إجمالي المدفوعات</Text>
-            <Text style={styles.totalValue}>{totalAmount.toFixed(2)} دينار</Text>
+            <Text style={styles.totalValue}>{totalAmount.toFixed(2)} ريال</Text>
           </View>
           <View style={styles.totalIcon}>
             <Ionicons name="wallet" size={32} color={theme.colors.primary} />
