@@ -58,6 +58,12 @@ export default function AddPaymentModal({ visible, onClose, onSuccess }: AddPaym
         'SELECT id, name FROM workers WHERE status = "active"'
       ) as Worker[];
       setWorkers(workersResult);
+      
+      // تعيين أول عامل كقيمة افتراضية
+      if (workersResult.length > 0 && formData.workerId === 0) {
+        setFormData(prev => ({ ...prev, workerId: workersResult[0].id }));
+        loadWorkerDistributions(workersResult[0].id.toString());
+      }
     } catch (error) {
       console.error('Error loading data:', error);
     }
