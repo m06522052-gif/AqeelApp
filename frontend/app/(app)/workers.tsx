@@ -136,7 +136,10 @@ export default function WorkersScreen() {
       <View style={styles.workerFooter}>
         <TouchableOpacity
           style={[styles.actionButton, { backgroundColor: `${theme.colors.primary}20` }]}
-          onPress={() => handleToggleStatus(item)}
+          onPress={(e) => {
+            e.stopPropagation();
+            handleToggleStatus(item);
+          }}
         >
           <Ionicons
             name={item.status === 'active' ? 'pause-circle' : 'play-circle'}
@@ -151,7 +154,7 @@ export default function WorkersScreen() {
           تاريخ التسجيل: {format(new Date(item.registration_date), 'yyyy-MM-dd')}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
