@@ -39,6 +39,31 @@ export default function BatchesScreen() {
     setRefreshing(false);
   };
 
+  const handleDelete = (batch: Batch) => {
+    Alert.alert(
+      'تأكيد الحذف',
+      `هل تريد حذف الدفعة ${batch.batch_number}؟`,
+      [
+        { text: 'إلغاء', style: 'cancel' },
+        {
+          text: 'حذف',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const db = await getDatabase();
+              await db.runAsync('DELETE FROM batches WHERE id = ?', batch.id);
+              await loadBatches();
+              Alert.alert('نجاح', 'تم حذف الدفعة بنجاح');
+            } catch (error) {
+              console.error('Error deleting batch:', error);
+              Alert.alert('خطأ', 'حدث خطأ أثناء حذف الدفعة');
+            }
+          },
+        },
+      ]
+    );
+  };
+
   useEffect(() => {
     loadBatches();
   }, []);
@@ -67,14 +92,19 @@ export default function BatchesScreen() {
           <Text style={styles.detailLabel}>الكمية:</Text>
         </View>
         <View style={styles.detailRow}>
-          <Text style={styles.detailValue}>{item.price.toFixed(2)} دينار</Text>
+          <Text style={styles.detailValue}>{item.price.toFixed(2)} ريال</Text>
           <Text style={styles.detailLabel}>السعر:</Text>
         </View>
       </View>
 
       <View style={styles.batchFooter}>
-        <View style={[styles.statusBadge, item.status === 'active' ? styles.statusActive : styles.statusInactive]}>
-          <Text style={styles.statusText}>{item.status === 'active' ? 'نشط' : 'غير نشط'}</Text>
+        <View style={styles.actionButtons}>
+          <TouchableOpacity 
+            style={[styles.actionButton, { backgroundColor: `${theme.colors.error}20` }]}
+            onPress={() => handleDelete(item)}
+          >
+            <Ionicons name="trash" size={18} color={theme.colors.error} />
+          </TouchableOpacity>
         </View>
         <Text style={styles.date}>{format(new Date(item.receive_date), 'yyyy-MM-dd')}</Text>
       </View>
@@ -84,7 +114,7 @@ export default function BatchesScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.addButton}>
+        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
           <Ionicons name="add" size={24} color={theme.colors.surface} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>إدارة الدفعات</Text>
@@ -103,6 +133,12 @@ export default function BatchesScreen() {
             <Text style={styles.emptySubtext}>اضغط على زر + لإضافة دفعة جديدة</Text>
           </View>
         }
+      />
+
+      <AddBatchModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSuccess={loadBatches}
       />
     </View>
   );
@@ -203,21 +239,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  statusBadge: {
-    paddingHorizontal: theme.spacing.sm,
-    paddingVertical: theme.spacing.xs,
-    borderRadius: theme.borderRadius.sm,
+  actionButtons: {
+    flexDirection: 'row',
+    gap: theme.spacing.sm,
   },
-  statusActive: {
-    backgroundColor: `${theme.colors.success}20`,
-  },
-  statusInactive: {
-    backgroundColor: `${theme.colors.textSecondary}20`,
-  },
-  statusText: {
-    fontSize: theme.fontSize.xs,
-    fontWeight: theme.fontWeight.medium,
-    color: theme.colors.text,
+  actionButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   date: {
     fontSize: theme.fontSize.sm,
