@@ -49,6 +49,26 @@ export const initDatabase = async () => {
     );
   `);
 
+  // جدول المواد الخام - جديد
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS materials (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      material_number TEXT NOT NULL UNIQUE,
+      name TEXT NOT NULL,
+      description TEXT,
+      unit TEXT NOT NULL,
+      quantity REAL NOT NULL,
+      unit_price REAL NOT NULL,
+      supplier TEXT,
+      warehouse_id INTEGER,
+      minimum_stock REAL,
+      notes TEXT,
+      status TEXT DEFAULT 'active',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (warehouse_id) REFERENCES warehouses (id)
+    );
+  `);
+
   // جدول العمال
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS workers (
