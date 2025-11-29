@@ -204,6 +204,20 @@ export default function AppLayout() {
           title: 'التقارير',
         }}
       />
+      <Drawer.Screen
+        name="materials"
+        options={{
+          drawerLabel: 'المواد',
+          title: 'المواد',
+        }}
+      />
+      <Drawer.Screen
+        name="users"
+        options={{
+          drawerLabel: 'المستخدمون',
+          title: 'المستخدمون',
+        }}
+      />
     </Drawer>
   );
 }
