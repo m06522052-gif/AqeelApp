@@ -32,6 +32,7 @@ export default function PaymentDetailScreen() {
   const router = useRouter();
   const [payment, setPayment] = useState<PaymentDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   useEffect(() => {
     loadPaymentDetails();
