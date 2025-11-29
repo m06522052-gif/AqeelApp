@@ -79,11 +79,29 @@ function CustomDrawerContent(props: any) {
       </View>
 
       <View style={styles.drawerSection}>
-        <Text style={styles.sectionTitle}>النظام</Text>
+        <Text style={styles.sectionTitle}>المخزون</Text>
+        <DrawerItem
+          label="المواد"
+          icon={({ size, color }) => <Ionicons name="layers" size={size} color={color} />}
+          onPress={() => router.push('/(app)/materials')}
+          labelStyle={styles.drawerItemLabel}
+          style={styles.drawerItem}
+        />
         <DrawerItem
           label="حركة المخزون"
           icon={({ size, color }) => <Ionicons name="swap-horizontal" size={size} color={color} />}
           onPress={() => router.push('/(app)/inventory')}
+          labelStyle={styles.drawerItemLabel}
+          style={styles.drawerItem}
+        />
+      </View>
+
+      <View style={styles.drawerSection}>
+        <Text style={styles.sectionTitle}>النظام</Text>
+        <DrawerItem
+          label="المستخدمون"
+          icon={({ size, color }) => <Ionicons name="people-circle" size={size} color={color} />}
+          onPress={() => router.push('/(app)/users')}
           labelStyle={styles.drawerItemLabel}
           style={styles.drawerItem}
         />
