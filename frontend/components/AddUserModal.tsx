@@ -66,7 +66,7 @@ export default function AddUserModal({ visible, onClose, onSuccess }: AddUserMod
         phone: '',
         password: '',
         confirmPassword: '',
-        role: 'user',
+        role: 'employee',
       });
       onSuccess();
       onClose();
