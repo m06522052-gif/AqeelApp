@@ -1,10 +1,10 @@
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { initDatabase } from '../database/schema';
+import { initDatabase } from '@/database/schema';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider as PaperProvider } from 'react-native-paper';
-import { theme } from '../constants/theme';
+import { theme } from '@/constants/theme';
 
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
