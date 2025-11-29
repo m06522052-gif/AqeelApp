@@ -34,6 +34,7 @@ export default function ProductionDetailScreen() {
   const router = useRouter();
   const [production, setProduction] = useState<ProductionDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   useEffect(() => {
     loadProductionDetails();
