@@ -248,6 +248,11 @@ export default function WarehouseDetailScreen() {
         </View>
 
         <View style={styles.actionsCard}>
+          <TouchableOpacity style={styles.editButton} onPress={() => setEditModalVisible(true)}>
+            <Ionicons name="create" size={20} color={theme.colors.surface} />
+            <Text style={styles.editButtonText}>تعديل المخزن</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity 
             style={[styles.actionButton, { backgroundColor: warehouse.status === 1 ? theme.colors.warning : theme.colors.success }]}
             onPress={handleToggleStatus}
@@ -264,6 +269,21 @@ export default function WarehouseDetailScreen() {
           </TouchableOpacity>
         </View>
       </View>
+
+      {warehouse && (
+        <EditWarehouseModal
+          visible={editModalVisible}
+          onClose={() => setEditModalVisible(false)}
+          onSuccess={loadWarehouseDetails}
+          warehouseId={warehouse.id}
+          currentData={{
+            name: warehouse.name,
+            location: warehouse.location,
+            type: warehouse.type,
+            responsible: warehouse.responsible,
+          }}
+        />
+      )}
     </ScrollView>
   );
 }
