@@ -76,6 +76,35 @@ export default function WorkerDetailScreen() {
     }
   };
 
+  const handleToggleStatus = async () => {
+    if (!worker) return;
+    
+    const newStatus = worker.status === 'active' ? 'inactive' : 'active';
+    const statusText = newStatus === 'active' ? 'تنشيط' : 'تعطيل';
+    
+    Alert.alert(
+      'تأكيد',
+      `هل أنت متأكد من ${statusText} العامل ${worker.name}؟`,
+      [
+        { text: 'إلغاء', style: 'cancel' },
+        {
+          text: statusText,
+          onPress: async () => {
+            try {
+              const db = await getDatabase();
+              await db.runAsync('UPDATE workers SET status = ? WHERE id = ?', newStatus, worker.id);
+              Alert.alert('نجاح', `تم ${statusText} العامل بنجاح`);
+              loadWorkerDetails();
+            } catch (error) {
+              console.error('Error toggling worker status:', error);
+              Alert.alert('خطأ', 'حدث خطأ أثناء تحديث حالة العامل');
+            }
+          },
+        },
+      ]
+    );
+  };
+
   const handleDelete = () => {
     Alert.alert(
       'تأكيد الحذف',
