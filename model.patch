@@ -1,0 +1,29 @@
+diff --git a/frontend/app/(app)/distributions.tsx b/frontend/app/(app)/distributions.tsx
+index f143892..b082928 100644
+--- a/frontend/app/(app)/distributions.tsx
++++ b/frontend/app/(app)/distributions.tsx
+@@ -123,7 +123,7 @@ export default function DistributionsScreen() {
+   return (
+     <View style={styles.container}>
+       <View style={styles.header}>
+-        <TouchableOpacity style={styles.addButton}>
++        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+           <Ionicons name="add" size={24} color={theme.colors.surface} />
+         </TouchableOpacity>
+         <Text style={styles.headerTitle}>إدارة التوزيع</Text>
+@@ -142,6 +142,15 @@ export default function DistributionsScreen() {
+           </View>
+         }
+       />
++      
++      <AddDistributionModal
++        visible={modalVisible}
++        onClose={() => setModalVisible(false)}
++        onSuccess={() => {
++          setModalVisible(false);
++          loadDistributions();
++        }}
++      />
+     </View>
+   );
+ }
