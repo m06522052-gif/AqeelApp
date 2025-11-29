@@ -14,7 +14,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import { useAuthStore } from '@/stores/authStore';
-import { getDatabase } from '../database/schema';
+import { getDatabase } from '@/database/schema';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
