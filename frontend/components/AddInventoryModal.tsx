@@ -37,9 +37,9 @@ export default function AddInventoryModal({ visible, onClose, onSuccess }: AddIn
   const [batches, setBatches] = useState<Batch[]>([]);
   const [formData, setFormData] = useState({
     movementType: 'تحويل',
-    fromWarehouseId: '',
-    toWarehouseId: '',
-    batchId: '',
+    fromWarehouseId: 0,
+    toWarehouseId: 0,
+    batchId: 0,
     quantity: '',
     responsible: '',
     notes: '',
