@@ -184,12 +184,34 @@ export default function PaymentDetailScreen() {
         )}
 
         <View style={styles.actionsCard}>
+          <TouchableOpacity style={styles.editButton} onPress={() => setEditModalVisible(true)}>
+            <Ionicons name="create" size={20} color={theme.colors.surface} />
+            <Text style={styles.editButtonText}>تعديل الدفعة</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
             <Ionicons name="trash" size={20} color={theme.colors.surface} />
             <Text style={styles.deleteButtonText}>حذف الدفعة</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {payment && (
+        <EditPaymentModal
+          visible={editModalVisible}
+          onClose={() => setEditModalVisible(false)}
+          onSuccess={loadPaymentDetails}
+          paymentId={payment.id}
+          currentData={{
+            worker_id: payment.worker_id,
+            distribution_id: payment.distribution_id || 0,
+            amount: payment.amount,
+            payment_date: payment.payment_date,
+            payment_method: payment.payment_method,
+            notes: payment.notes || '',
+          }}
+        />
+      )}
     </ScrollView>
   );
 }
