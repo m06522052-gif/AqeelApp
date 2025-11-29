@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import { getDatabase } from '@/database/schema';
 import { Picker } from '@react-native-picker/picker';
+import { useRouter } from 'expo-router';
 
 interface Warehouse {
   id: number;
