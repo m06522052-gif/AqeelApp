@@ -210,12 +210,36 @@ export default function BatchDetailScreen() {
         )}
 
         <View style={styles.actionsCard}>
+          <TouchableOpacity style={styles.editButton} onPress={() => setEditModalVisible(true)}>
+            <Ionicons name="create" size={20} color={theme.colors.surface} />
+            <Text style={styles.editButtonText}>تعديل الدفعة</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
             <Ionicons name="trash" size={20} color={theme.colors.surface} />
             <Text style={styles.deleteButtonText}>حذف الدفعة</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {batch && (
+        <EditBatchModal
+          visible={editModalVisible}
+          onClose={() => setEditModalVisible(false)}
+          onSuccess={loadBatchDetails}
+          batchId={batch.id}
+          currentData={{
+            batch_number: batch.batch_number,
+            supplier: batch.supplier,
+            receive_date: batch.receive_date,
+            bag_type: batch.bag_type,
+            quantity: batch.quantity,
+            price: batch.price,
+            warehouse_id: batch.warehouse_id,
+            notes: batch.notes,
+          }}
+        />
+      )}
     </ScrollView>
   );
 }
