@@ -27,4 +27,7 @@ config.resolver.extraNodeModules = {
   '@': __dirname,
 };
 
+// Add support for WASM files
+config.resolver.assetExts.push('wasm');
+
 module.exports = config;
