@@ -67,6 +67,14 @@ export default function AddProductionModal({ visible, onClose, onSuccess }: AddP
       
       setDistributions(distResult);
       setWarehouses(warehousesResult);
+      
+      // تعيين أول عنصر كقيمة افتراضية
+      if (distResult.length > 0 && formData.distributionId === 0) {
+        setFormData(prev => ({ ...prev, distributionId: distResult[0].id }));
+      }
+      if (warehousesResult.length > 0 && formData.warehouseId === 0) {
+        setFormData(prev => ({ ...prev, warehouseId: warehousesResult[0].id }));
+      }
     } catch (error) {
       console.error('Error loading data:', error);
     }
