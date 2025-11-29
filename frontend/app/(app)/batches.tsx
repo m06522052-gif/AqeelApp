@@ -107,14 +107,17 @@ export default function BatchesScreen() {
         <View style={styles.actionButtons}>
           <TouchableOpacity 
             style={[styles.actionButton, { backgroundColor: `${theme.colors.error}20` }]}
-            onPress={() => handleDelete(item)}
+            onPress={(e) => {
+              e.stopPropagation();
+              handleDelete(item);
+            }}
           >
             <Ionicons name="trash" size={18} color={theme.colors.error} />
           </TouchableOpacity>
         </View>
         <Text style={styles.date}>{format(new Date(item.receive_date), 'yyyy-MM-dd')}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
