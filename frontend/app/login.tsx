@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import { useAuthStore } from '@/stores/authStore';
 import { getDatabase } from '@/database/schema';
+import { verifyPassword } from '@/utils/security';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
