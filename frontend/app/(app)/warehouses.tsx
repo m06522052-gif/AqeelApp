@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
-import { getDatabase } from '../../database/schema';
+import { getDatabase } from '@/database/schema';
 import { Picker } from '@react-native-picker/picker';
 
 interface Warehouse {
