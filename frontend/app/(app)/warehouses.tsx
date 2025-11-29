@@ -285,11 +285,23 @@ const styles = StyleSheet.create({
     fontWeight: theme.fontWeight.bold,
     color: theme.colors.surface,
   },
+  headerButtons: {
+    flexDirection: 'row',
+    gap: theme.spacing.sm,
+  },
   addButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
     backgroundColor: theme.colors.secondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dashboardButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: theme.colors.success,
     justifyContent: 'center',
     alignItems: 'center',
   },
