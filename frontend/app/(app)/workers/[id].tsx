@@ -450,6 +450,19 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSize.md,
     fontWeight: theme.fontWeight.bold,
   },
+  toggleButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    gap: theme.spacing.sm,
+  },
+  toggleButtonText: {
+    color: theme.colors.surface,
+    fontSize: theme.fontSize.md,
+    fontWeight: theme.fontWeight.bold,
+  },
   deleteButton: {
     backgroundColor: theme.colors.error,
     flexDirection: 'row',
