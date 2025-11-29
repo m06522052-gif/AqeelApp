@@ -151,14 +151,15 @@ export const initDatabase = async () => {
     );
   `);
 
-  // إدراج مستخدم افتراضي للتجربة
+  // إدراج مستخدم افتراضي للتجربة (كلمة المرور مشفرة)
   try {
+    const hashedPassword = await hashPassword('admin123');
     await db.runAsync(
       'INSERT OR IGNORE INTO users (username, email, password, role) VALUES (?, ?, ?, ?)',
-      'admin', 'admin@abdulsalam.com', 'admin123', 'admin'
+      'admin', 'admin@abdulsalam.com', hashedPassword, 'admin'
     );
   } catch (e) {
-    console.log('Default user already exists');
+    console.log('Default user already exists or error:', e);
   }
 
   return db;
