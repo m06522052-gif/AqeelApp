@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import { hashPassword } from '../utils/security';
 
 export const initDatabase = async () => {
   const db = await SQLite.openDatabaseAsync('abdulsalam.db');
