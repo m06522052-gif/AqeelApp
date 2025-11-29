@@ -32,6 +32,7 @@ export default function WorkerDetailScreen() {
   const router = useRouter();
   const [worker, setWorker] = useState<WorkerDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   useEffect(() => {
     loadWorkerDetails();
