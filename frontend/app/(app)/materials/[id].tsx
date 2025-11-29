@@ -34,6 +34,7 @@ export default function MaterialDetailScreen() {
   const router = useRouter();
   const [material, setMaterial] = useState<MaterialDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   useEffect(() => {
     loadMaterialDetails();
