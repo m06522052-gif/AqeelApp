@@ -61,6 +61,14 @@ export default function AddDistributionModal({ visible, onClose, onSuccess }: Ad
       
       setWorkers(workersResult);
       setBatches(batchesResult);
+      
+      // تعيين أول عنصر كقيمة افتراضية
+      if (workersResult.length > 0 && formData.workerId === 0) {
+        setFormData(prev => ({ ...prev, workerId: workersResult[0].id }));
+      }
+      if (batchesResult.length > 0 && formData.batchId === 0) {
+        setFormData(prev => ({ ...prev, batchId: batchesResult[0].id }));
+      }
     } catch (error) {
       console.error('Error loading data:', error);
     }
