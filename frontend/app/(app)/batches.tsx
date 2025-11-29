@@ -20,6 +20,7 @@ interface Batch {
 }
 
 export default function BatchesScreen() {
+  const router = useRouter();
   const [batches, setBatches] = useState<Batch[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
