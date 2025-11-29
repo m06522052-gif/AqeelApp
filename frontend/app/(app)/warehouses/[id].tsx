@@ -455,6 +455,20 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.xl,
     gap: theme.spacing.md,
   },
+  editButton: {
+    backgroundColor: theme.colors.primary,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    gap: theme.spacing.sm,
+  },
+  editButtonText: {
+    color: theme.colors.surface,
+    fontSize: theme.fontSize.md,
+    fontWeight: theme.fontWeight.bold,
+  },
   actionButton: {
     flexDirection: 'row',
     justifyContent: 'center',
