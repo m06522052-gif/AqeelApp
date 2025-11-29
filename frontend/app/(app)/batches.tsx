@@ -75,7 +75,11 @@ export default function BatchesScreen() {
   };
 
   const renderBatchItem = ({ item }: { item: Batch }) => (
-    <View style={styles.batchCard}>
+    <TouchableOpacity 
+      style={styles.batchCard}
+      onPress={() => router.push(`/batches/${item.id}`)}
+      activeOpacity={0.7}
+    >
       <View style={styles.batchHeader}>
         <View style={[styles.bagTypeBadge, { backgroundColor: `${getBagTypeColor(item.bag_type)}20` }]}>
           <Text style={[styles.bagTypeText, { color: getBagTypeColor(item.bag_type) }]}>
