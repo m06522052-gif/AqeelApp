@@ -39,24 +39,51 @@ export default function AddUserModal({ visible, onClose, onSuccess }: AddUserMod
   ];
 
   const handleSubmit = async () => {
+    // التحقق من الحقول الفارغة
     if (!formData.username.trim() || !formData.email.trim() || !formData.password) {
       Alert.alert('خطأ', 'الرجاء إدخال جميع الحقول المطلوبة');
       return;
     }
 
+    // التحقق من صحة البريد الإلكتروني
+    if (!validateEmail(formData.email)) {
+      Alert.alert('خطأ', 'البريد الإلكتروني غير صحيح');
+      return;
+    }
+
+    // التحقق من تطابق كلمتي المرور
     if (formData.password !== formData.confirmPassword) {
-      Alert.alert('خطأ', 'كلمة المرور غير متطابقة');
+      Alert.alert('خطأ', 'كلمات المرور غير متطابقة');
+      return;
+    }
+
+    // التحقق من قوة كلمة المرور
+    const passwordValidation = validatePasswordStrength(formData.password);
+    if (!passwordValidation.isValid) {
+      Alert.alert(
+        'كلمة مرور ضعيفة',
+        'يجب أن تحتوي كلمة المرور على:\n' + passwordValidation.errors.join('\n')
+      );
       return;
     }
 
     try {
       const db = await getDatabase();
+      
+      // تنظيف المدخلات
+      const cleanUsername = sanitizeInput(formData.username);
+      const cleanEmail = sanitizeInput(formData.email);
+      const cleanPhone = sanitizeInput(formData.phone);
+      
+      // تشفير كلمة المرور
+      const hashedPassword = await hashPassword(formData.password);
+      
       await db.runAsync(
         'INSERT INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?)',
-        formData.username.trim(),
-        formData.email.trim(),
-        formData.phone.trim(),
-        formData.password,
+        cleanUsername,
+        cleanEmail,
+        cleanPhone,
+        hashedPassword,
         formData.role
       );
 
@@ -76,7 +103,7 @@ export default function AddUserModal({ visible, onClose, onSuccess }: AddUserMod
       if (error.message && error.message.includes('UNIQUE')) {
         Alert.alert('خطأ', 'اسم المستخدم أو البريد الإلكتروني موجود مسبقاً');
       } else {
-        Alert.alert('خطأ', 'حدث خطأ أثناء إضافة المستخدم');
+        Alert.alert('خطأ', 'حدث خطأ أثناء إضافة المستخدم. يرجى المحاولة مرة أخرى.');
       }
     }
   };
