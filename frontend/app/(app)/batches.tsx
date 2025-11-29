@@ -21,6 +21,7 @@ interface Batch {
 export default function BatchesScreen() {
   const [batches, setBatches] = useState<Batch[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const loadBatches = async () => {
     try {
