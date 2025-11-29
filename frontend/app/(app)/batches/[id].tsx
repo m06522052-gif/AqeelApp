@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import { getDatabase } from '@/database/schema';
 import { format } from 'date-fns';
+import EditBatchModal from '@/components/EditBatchModal';
 
 interface BatchDetails {
   id: number;
